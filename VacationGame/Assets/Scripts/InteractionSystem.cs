@@ -2,26 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interact : MonoBehaviour
+public class InteractionSystem : MonoBehaviour
 {
     [SerializeField] Transform interactPoint;
     [SerializeField] float interactRange;
 
     [SerializeField] LayerMask interactLayers;
 
+    void Start()
+    {
+        DisableButton();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        InteractionWithoutAll();
+        Interact();
     }
 
-    void InteractionWithoutAll()
+    void Interact()
     {
         Collider2D interactable = Physics2D.OverlapCircle(interactPoint.position, interactRange, interactLayers);
 
-        bool interact = interactable;
-        
-        if (interact == true)
+        if (interactable != null)
         {
             //ButtonDisplay buttonDisplay = interactable.GetComponent<ButtonDisplay>();
             //buttonDisplay.ShowButton();
@@ -37,11 +40,7 @@ public class Interact : MonoBehaviour
         }
         else
         {
-            GameObject[] buttons = GameObject.FindGameObjectsWithTag("InteragirT");
-            foreach(GameObject button in buttons)
-            {
-                button.GetComponent<SpriteRenderer>().enabled = false;
-            }
+            DisableButton();
         }
     }
 
@@ -53,5 +52,14 @@ public class Interact : MonoBehaviour
         }
 
         Gizmos.DrawWireSphere(interactPoint.position, interactRange);
+    }
+
+    void DisableButton()
+    {
+        GameObject[] buttons = GameObject.FindGameObjectsWithTag("InteractT");
+        foreach (GameObject button in buttons)
+        {
+            button.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
 }
